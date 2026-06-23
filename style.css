@@ -1,0 +1,141 @@
+/* ===== 폰트 정의 ===== */
+@font-face{font-family:"MaruMinya";src:url("assets/maruminya.ttf") format("truetype");font-display:swap}
+@font-face{font-family:"Galmuri11";src:url("https://cdn.jsdelivr.net/gh/quiple/galmuri/dist/Galmuri11.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"GraceSerif";src:url("assets/GraceSerif-Regular.otf") format("opentype");font-weight:400;font-display:swap}
+@font-face{font-family:"GraceSerif";src:url("assets/GraceSerif-Bold.otf") format("opentype");font-weight:700;font-display:swap}
+
+/* ===== 기본값 / 테마 색상 ===== */
+:root{
+  --accent:#ffcf5c;          /* 등불 노랑 — 여기서 색을 바꾸면 전체 강조색이 바뀝니다 */
+  --accent-soft:#ffe6a3;
+  --dim:#3a3754;
+  --pixel-font:"MaruMinya","Galmuri11","DungGeunMo",monospace;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:#070710;overflow:hidden;font-family:var(--pixel-font)}
+
+/* ===== 배경 레이어 ===== */
+.bg-base{position:fixed;inset:0;z-index:0;background:#06060e}
+.bg-drift{position:fixed;z-index:0;background:url('assets/cave.gif') center/cover}
+.bg-drift-a{inset:-12%;filter:sepia(1) saturate(3.2) hue-rotate(2deg) brightness(.4) contrast(1.05);animation:driftA 40s ease-in-out infinite}
+.bg-drift-b{inset:-16%;z-index:1;filter:blur(8px) sepia(1) saturate(2.6) hue-rotate(2deg) brightness(.3);mix-blend-mode:screen;opacity:.55;animation:driftB 58s ease-in-out infinite}
+.vignette{position:fixed;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse 62% 56% at 50% 44%, rgba(255,207,92,.10) 0%, rgba(255,207,92,.03) 34%, transparent 70%);animation:flicker 4s ease-in-out infinite}
+.scanlines{position:fixed;inset:0;z-index:3;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,0,0,0) 2px,rgba(0,0,0,.16) 3px,rgba(0,0,0,.16) 3px);mix-blend-mode:multiply;opacity:.5}
+
+/* ===== 무대 ===== */
+.stage{position:fixed;inset:0;z-index:5;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:26px;color:var(--accent-soft);letter-spacing:.5px;-webkit-font-smoothing:none;image-rendering:pixelated}
+
+/* 화면 공통 (페이드인 + 1px 위/아래 바운스) */
+.screen{width:min(860px,94vw);margin:auto 0;display:flex;flex-direction:column;align-items:center;text-align:center;animation:fadein .55s ease, bob 5s linear infinite}
+.lantern-screen{margin:120px 0 80px}
+
+/* ===== 타이틀 화면 ===== */
+.lantern-img{width:208px;height:208px;object-fit:contain;-webkit-mask:radial-gradient(circle at 50% 46%,#000 38%,transparent 66%);mask:radial-gradient(circle at 50% 46%,#000 38%,transparent 66%);mix-blend-mode:screen;filter:drop-shadow(0 0 24px rgba(255,207,92,.5));animation:flicker 3s infinite;image-rendering:pixelated}
+.title-h1{font-size:clamp(30px,7vw,54px);color:var(--accent);text-shadow:0 0 22px rgba(255,207,92,.55);margin:6px 0 8px;font-weight:400}
+.title-sub{color:#7c7896;font-size:16px;margin-bottom:44px}
+.title-start{color:var(--accent-soft);font-size:27px;cursor:pointer;animation:blink 1.1s steps(2,start) infinite}
+.title-epi{color:#4f4c68;font-size:14px;margin-top:40px;line-height:1.8;max-width:460px}
+
+/* ===== 등불 문답 화면 ===== */
+.lantern-head{display:flex;align-items:center;gap:11px;margin-bottom:8px}
+.flame{display:inline-block;width:9px;height:12px;border-radius:50% 50% 45% 45%;background:radial-gradient(circle at 50% 35%,#fff,var(--accent) 55%,#b8821f);box-shadow:0 0 12px rgba(255,207,92,.7);animation:flicker 2.5s infinite}
+.lantern-no{color:var(--accent);font-size:16px;letter-spacing:1px}
+.lantern-topic{color:var(--accent);font-size:clamp(24px,6vw,38px);text-shadow:0 0 16px rgba(255,207,92,.45)}
+.lantern-status{border:2px solid var(--dim);background:rgba(255,207,92,.03);color:#8a86a8;font-size:16px;line-height:1.8;padding:16px 22px;margin:12px 0 20px;width:100%;text-align:left}
+.lantern-q{color:var(--accent-soft);font-size:19px;margin-bottom:20px}
+.choices{display:flex;flex-direction:column;gap:10px;width:100%}
+
+/* 선택지 카드 */
+.choice{position:relative;border:2px solid var(--dim);background:rgba(12,11,20,.5);padding:16px 20px 16px 46px;text-align:left;cursor:pointer;transition:border-color .12s,background .12s,box-shadow .2s;width:100%}
+.choice.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 13%,transparent);box-shadow:0 0 22px rgba(255,207,92,.17) inset, 0 0 14px rgba(255,207,92,.17)}
+.choice .heart{position:absolute;left:14px;top:14px;color:var(--accent);font-size:13px;opacity:0}
+.choice.sel .heart{opacity:1;animation:beat .8s infinite}
+.choice .line{display:block;color:#9692b2;font-size:17px;line-height:1.65}
+.choice.sel .line{color:var(--accent-soft)}
+.choice .src{display:block;margin-top:8px;color:#6a6786;font-size:13px}
+
+.save-note{margin-top:28px;font-size:16px;color:#5b5876}
+.save-note.on{color:var(--accent);animation:blink 1s steps(2) infinite}
+.pips{margin-top:24px;display:flex;gap:5px;align-items:center}
+.pip{width:13px;height:13px;border:1px solid var(--dim);background:transparent}
+.pip.done{background:#b8821f;border-color:#b8821f}
+.pip.cur{border-color:var(--accent);box-shadow:0 0 8px var(--accent)}
+.progress{color:#4f4c68;font-size:11px;margin-left:8px}
+
+/* ===== 결과 두루마리 ===== */
+.result-wrap{width:min(1300px,98vw);margin:auto 0;display:flex;flex-direction:column;align-items:center;animation:bob 5s linear infinite}
+.scroll{width:1300px;max-width:98vw;min-height:min(86vh,740px);background:url('assets/scroll-orig.png') center/100% 100% no-repeat;padding:8% 13%;box-sizing:border-box;transform-origin:center;animation:unroll 1.15s cubic-bezier(.2,.75,.2,1) forwards;display:flex;flex-direction:column;align-items:center;justify-content:center;image-rendering:pixelated}
+.scroll-inner{animation:scrollIn 1.25s ease forwards;display:flex;flex-direction:column;align-items:center;text-align:center;font-family:'GraceSerif',serif;color:#3c2a14;width:100%;margin-top:100px}
+.r-lead{font-size:13px;color:#6b4f2a;margin-bottom:14px;line-height:1.6;font-weight:400}
+.r-name{font-size:clamp(28px,6vw,40px);font-weight:700;line-height:1.1;margin-bottom:6px}
+.r-alias{font-size:16px;font-weight:700;color:#8a5a1e;margin-bottom:4px}
+.r-work{font-size:12px;color:#7a5c34;margin-bottom:18px;font-weight:400}
+.r-desc{font-size:13px;line-height:1.9;max-width:460px;font-weight:400;border-top:1px solid rgba(60,42,20,.25);padding-top:14px}
+.r-again{margin-top:18px;border:2px solid var(--accent);color:var(--accent);font-size:14px;padding:10px 24px;cursor:pointer;background:rgba(255,207,92,.04)}
+
+/* ===== 하단 안내문 ===== */
+.hint{position:fixed;bottom:14px;left:0;right:0;text-align:center;color:#4f4c68;font-size:14px;z-index:40;font-family:var(--pixel-font);animation:bob 5s linear infinite}
+
+/* ===== 클릭 파장 ===== */
+.ripple{position:fixed;border-radius:50%;border:2px solid var(--accent);background:radial-gradient(circle,color-mix(in srgb,var(--accent) 25%,transparent),transparent 62%);pointer-events:none;z-index:60;animation:rip .72s ease-out forwards}
+
+/* ===== 키프레임 ===== */
+@keyframes flicker{0%,100%{opacity:.85}45%{opacity:1}55%{opacity:.7}70%{opacity:.93}}
+@keyframes bob{0%,49.9%{transform:translateY(-1px)}50%,100%{transform:translateY(0)}}
+@keyframes blink{50%{opacity:.15}}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.32)}}
+@keyframes driftA{0%,100%{transform:translate(0,0) scale(1.06)}50%{transform:translate(-2.2%,1.6%) scale(1.13)}}
+@keyframes driftB{0%,100%{transform:translate(0,0) scale(1.12)}50%{transform:translate(3%,-2.2%) scale(1.2)}}
+@keyframes rip{0%{transform:translate(-50%,-50%) scale(.18);opacity:.9}100%{transform:translate(-50%,-50%) scale(1);opacity:0}}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes unroll{0%{transform:scaleY(.03);filter:brightness(1.5)}55%{transform:scaleY(1.05)}74%{transform:scaleY(.98)}88%{transform:scaleY(1.01)}100%{transform:scaleY(1);filter:none}}
+@keyframes scrollIn{0%,52%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:none}}
+
+/* ===== 소주제 다짐 문단 (답 기록 시 펼쳐짐) ===== */
+.lantern-vow{width:100%;margin:18px 0 4px;border:2px solid var(--accent);
+  background:color-mix(in srgb,var(--accent) 7%,transparent);
+  padding:15px 18px;text-align:left;
+  animation:fadein .5s ease;box-shadow:0 0 18px rgba(255,207,92,.12) inset}
+.vow-label{color:var(--accent);font-size:15px;letter-spacing:1px;margin-bottom:11px}
+.vow-body{color:var(--accent-soft);font-size:16px;line-height:1.95}
+
+/* ===== 타이틀→서문 고스트 페이드아웃 ===== */
+body.ghost-out .bg-base,
+body.ghost-out .bg-drift,
+body.ghost-out .vignette,
+body.ghost-out .scanlines{
+  transition:opacity 1.15s ease; opacity:0 !important;
+}
+
+/* ===== 서문/후문 게이트 (위·아래 장식이 펼쳐짐) ===== */
+.gate-wrap{position:relative;width:min(920px,94vw);margin:auto 0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gate-orn{width:100%;max-width:760px;display:block;
+  filter:drop-shadow(0 0 14px rgba(255,207,92,.35));
+  opacity:0;transition:transform 1s cubic-bezier(.2,.8,.2,1), opacity .9s ease}
+.gate-top{transform:translateY(60px)}      /* 펼치기 전: 아래로 내려가 숨음 */
+.gate-bot{transform:translateY(-60px)}     /* 펼치기 전: 위로 올라가 숨음 */
+.gate-wrap.open .gate-top{transform:translateY(0);opacity:1}
+.gate-wrap.open .gate-bot{transform:translateY(0);opacity:1}
+
+/* 가운데 글 패널 — 장식이 열린 뒤 떠오름 */
+.gate-panel{font-family:'GraceSerif',serif;color:var(--accent-soft);
+  width:100%;max-width:760px;padding:24px 30px;text-align:center;
+  opacity:0;transform:translateY(8px);
+  transition:opacity 1s ease .5s, transform 1s ease .5s}
+.gate-wrap.open .gate-panel{opacity:1;transform:none}
+.gate-title{font-family:'GraceSerif',serif;font-weight:700;
+  font-size:clamp(20px,4.6vw,28px);color:var(--accent);
+  text-shadow:0 0 18px rgba(255,207,92,.45);margin-bottom:22px;letter-spacing:1px}
+.gate-line{font-size:15px;line-height:2.05;color:var(--accent-soft);
+  margin:0 auto 13px;max-width:720px;font-weight:400}
+.gate-line b{font-family:'GraceSerif',serif;font-weight:700;color:var(--accent)}
+.gate-line .quote{color:#fff3d6;font-style:italic}
+.gate-enter{margin-top:26px;color:var(--accent);font-size:15px;cursor:pointer;
+  font-family:var(--pixel-font);animation:blink 1.1s steps(2,start) infinite}
+.outro-enter{animation:blink 1.1s steps(2,start) infinite}
+
+/* 후문 타자 줄: 커서 깜빡임 */
+.gate-line.typing{min-height:1.6em}
