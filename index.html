@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>등불의 끝은</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 배경 레이어 (동굴 잔상 + 등불 비네트 + 스캔라인) -->
+  <div class="bg-base"></div>
+  <div class="bg-drift bg-drift-a"></div>
+  <div class="bg-drift bg-drift-b"></div>
+  <div class="vignette"></div>
+  <div class="scanlines" id="scanlines"></div>
+
+  <!-- 화면이 그려지는 무대 -->
+  <div class="stage" id="app" style="height: 800px"></div>
+
+  <!-- 하단 안내문 -->
+  <div class="hint" id="hint"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
